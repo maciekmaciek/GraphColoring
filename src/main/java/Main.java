@@ -25,14 +25,15 @@ public class Main {
                 //Scanner sc = new Scanner(System.in);
                 int population = 20;//sc.nextInt();
 
-                int colors = 5;//calcNumberOfColors(nodes, edges, graph);
+                int colors = 10;//calcNumberOfColors(nodes, edges, graph);
                 allTimeWinners = new Chromosome[colors];
                 boolean isFound = true;
 
                 for(int i = colors-1; i > 0 && isFound; i--) {
+                    System.out.println("------------------" + i);
                     Evolution ev = new Evolution(graph, nodes, edges, population, i+1);
                     allTimeWinners[i] = ev.evolve();
-                    if(allTimeWinners[i].fitness < 1)
+                    if(allTimeWinners[i].fitness > 0)
                         isFound = false;
                 }
             }

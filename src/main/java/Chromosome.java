@@ -15,7 +15,6 @@ public class Chromosome {
 
     public Chromosome(int[] genes, int colors) {
         this.genes = genes;
-        colors = genes.length; //inicjalizuje
         this.colors = colors;//countColors();//liczy
     }
 
@@ -72,7 +71,7 @@ public class Chromosome {
     }
 
 
-    public void evaluate(ArrayList<ArrayList<Integer>> graph, int edges) {
+    public void evaluate(ArrayList<ArrayList<Integer>> graph) {
         int conflicts = 0;
         for(int i = 0; i <genes.length; i++)
         {
@@ -103,6 +102,51 @@ public class Chromosome {
                         genes[i] = j;//zamień na któryś mniej konfliktowy
                         swap = true;
                     }
+                }
+            }
+        }
+    }
+
+    public void minimizeErrorsV2(ArrayList<ArrayList<Integer>> graph, double MUTATION) {
+        for (int i = 0; i < genes.length; i++) {    //dla każdego genu zmień kolor na mniej konfliktowy
+            SecureRandom sr = new SecureRandom();
+            if (sr.nextDouble() <= MUTATION) {
+                int[] quantities = new int[colors];
+
+                ArrayList<Integer> eg = graph.get(i);
+                for (int j = 0; j < eg.size(); j++) {   //przeszukiwanie krawędzi
+                    quantities[genes[eg.get(j)]]++;   //ile wystąpień koloru
+                }
+
+                int conflicts = quantities[genes[i]];
+                if (conflicts > 1) { // jeżeli są konflikty
+
+                    boolean swap = false;
+                    for (int j = 0; j < quantities.length && !swap; j++) {//szukaj
+                        if (quantities[j] > 0 && quantities[j] < conflicts) {
+                            genes[i] = j;//zamień na któryś mniej konfliktowy
+                            swap = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+        public void minimizeErrorsV3(ArrayList<ArrayList<Integer>> graph, double MUTATION) {
+        for(int i = 0; i<genes.length; i++){    //dla każdego genu zmień kolor na mniej konfliktowy
+            SecureRandom sr = new SecureRandom();
+            if (sr.nextDouble() <= MUTATION) {
+                int[] quantities = new int[colors];
+
+                ArrayList<Integer> eg = graph.get(i);
+                for (int j = 0; j < eg.size(); j++) {   //przeszukiwanie krawędzi
+                    quantities[genes[eg.get(j)]]++;   //ile wystąpień koloru
+                }
+
+                int conflicts = quantities[genes[i]];
+                if (conflicts != 0) { // jeżeli są konflikty
+                    genes[i] = sr.nextInt(colors);
                 }
             }
         }

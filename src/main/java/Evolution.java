@@ -14,7 +14,7 @@ public class Evolution {
     private int edges;
     private int colors;
     private final double MUTATION = 0.8;
-    private final double CROSSOVER = 0.5;
+    private final double CROSSOVER = 0.8;
 
     public Evolution(ArrayList<ArrayList<Integer>> graph, int nodes, int edges, int population, int colors) {
         this.graph = graph;
@@ -28,7 +28,7 @@ public class Evolution {
 
     private void evaluatePopulation() {
         for (int i = 0; i < population.length; i++) {
-            population[i].evaluate(graph, edges);
+            population[i].evaluate(graph);
         }
     }
 
@@ -127,8 +127,8 @@ public class Evolution {
     private void mutatePopulation() {
         SecureRandom sr = new SecureRandom();
         for (Chromosome aPopulation : population) {
-            if (sr.nextDouble() <= MUTATION)
-                aPopulation.minimizeErrors(graph);
+
+                aPopulation.minimizeErrorsV3(graph, MUTATION);
         }
     }
 
