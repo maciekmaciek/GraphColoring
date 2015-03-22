@@ -1,5 +1,6 @@
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -12,9 +13,24 @@ public class Chromosome {
     double fitness;
     int colors;
 
-    public Chromosome(int length){
+    public Chromosome(int[] genes, int colors) {
+        this.genes = genes;
+        colors = genes.length; //inicjalizuje
+        this.colors = colors;//countColors();//liczy
+    }
+
+    public Chromosome(int length, int colors){
         fitness = 0;
         genes = new int[length];
+        this.colors = colors;
+    }
+
+    public Chromosome(Chromosome old){
+        this.fitness = old.getFitness();
+        this.colors = old.colors;
+        genes = new int[old.genes.length];
+        genes = Arrays.copyOf(old.genes, old.genes.length);
+
     }
     public int[] getGenes() {
         return genes;
@@ -32,17 +48,16 @@ public class Chromosome {
         this.fitness = fitness;
     }
 
-    public void generateGenes(int colors){
+    public void generateGenes(){
         SecureRandom sr = new SecureRandom();
         for(int j = 0; j < genes.length; j++)
             genes[j] = sr.nextInt(colors);
 
-        this.colors = colors;
-        countColors();
+        //this.colors = colors;
+        //countColors();
 
     }
-
-    public int countColors(){
+  public int countColors(){
         int[] col = new int[colors];
 
         for(int i = 0; i< genes.length; i++)
@@ -56,23 +71,34 @@ public class Chromosome {
         return colors = counter;
     }
 
-    public void evaluate() {
-        Random r = new SecureRandom();
-        fitness = r.nextDouble();
+
+    public void evaluate(ArrayList<ArrayList<Integer>> graph, int edges) {
+        int conflicts = 0;
+        for(int i = 0; i <genes.length; i++)
+        {
+            int current = genes[i];
+            ArrayList<Integer> edgesArr = graph.get(i);
+            for(int j = 0; j < edgesArr.size(); j++){
+               if(genes[edgesArr.get(j)] == current)
+                   conflicts++;
+            }
+        }
+        fitness = 1 - (double)conflicts/(2*edges);
     }
 
     public void minimizeErrors(ArrayList<ArrayList<Integer>> graph) {
         for(int i = 0; i<genes.length; i++){    //dla każdego genu zmień kolor na mniej konfliktowy
             int[] quantities = new int[colors];
-            for(int j = 0; j < graph.get(i).size(); j++){   //przeszukiwanie krawędzi
-                quantities[genes[graph.get(i).get(j)]]++;   //ile wystąpień koloru
+            ArrayList<Integer> eg = graph.get(i);
+            for(int j = 0; j < eg.size(); j++){   //przeszukiwanie krawędzi
+                quantities[genes[eg.get(j)]]++;   //ile wystąpień koloru
             }
 
             int conflicts = quantities[genes[i]];
             if(conflicts > 1){ // jeżeli są konflikty
 
                 boolean swap = false;
-                for(int j = 0; j<quantities.length && !swap; i++) {//szukaj
+                for(int j = 0; j<quantities.length && !swap; j++) {//szukaj
                     if(quantities[j] > 0 && quantities[j] < conflicts) {
                         genes[i] = j;//zamień na któryś mniej konfliktowy
                         swap = true;

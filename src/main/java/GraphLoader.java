@@ -33,8 +33,8 @@ public class GraphLoader {
                     }
                 } else if(line.startsWith("e")){
                     tokens = line.split(" ");
-                    int node = Integer.parseInt(tokens[1]);
-                    int edge = Integer.parseInt(tokens[2]);
+                    int node = Integer.parseInt(tokens[1]) - 1;
+                    int edge = Integer.parseInt(tokens[2]) - 1;
                     result.get(node).add(edge);
                 }
             }
