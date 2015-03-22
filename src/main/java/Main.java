@@ -25,7 +25,7 @@ public class Main {
                 //Scanner sc = new Scanner(System.in);
                 int population = 20;//sc.nextInt();
 
-                int colors = calcNumberOfColors(nodes, edges, graph);
+                int colors = 5;//calcNumberOfColors(nodes, edges, graph);
                 allTimeWinners = new Chromosome[colors];
                 boolean isFound = true;
 

@@ -83,7 +83,7 @@ public class Chromosome {
                    conflicts++;
             }
         }
-        fitness = 1 - (double)conflicts/(2*edges);
+        fitness = conflicts/2;
     }
 
     public void minimizeErrors(ArrayList<ArrayList<Integer>> graph) {

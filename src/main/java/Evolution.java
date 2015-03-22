@@ -13,8 +13,8 @@ public class Evolution {
     private int nodes;
     private int edges;
     private int colors;
-    private final double MUTATION = 0.2;
-    private final double CROSSOVER = 0.8;
+    private final double MUTATION = 0.8;
+    private final double CROSSOVER = 0.5;
 
     public Evolution(ArrayList<ArrayList<Integer>> graph, int nodes, int edges, int population, int colors) {
         this.graph = graph;
@@ -49,19 +49,20 @@ public class Evolution {
         fittest = new Chromosome(findFittest());
         worst = new Chromosome(findWorst());
         double avg = 0;
-        results1000.add(0.);
-        double diff = 1;
+        results1000.add((double)edges);
+        double diff = edges;
         int i = 0;
         System.out.println("Pokolenie: " + i + ", " + fittest.fitness);
 
-        while (fittest.fitness < 1 && diff > 1.0 / edges) {
+       // while (fittest.fitness != 0 && diff > 2.0 ) {
+        while (fittest.fitness != 0 && i!= 100 ) {
             selectPopulation();
             crossoverPopulation();
             mutatePopulation();
             evaluatePopulation();
             fittest = new Chromosome(findFittest());
             worst = new Chromosome(findWorst());
-            if(i%10 == 0) {
+            if(i%1 == 0) {
                 System.out.println("Pokolenie: " + (i + 1));
                 System.out.println("\tmax, " + fittest.fitness);
                 System.out.println("\tmin, " + worst.fitness);
@@ -71,7 +72,7 @@ public class Evolution {
             if (i % 1000 == 0) {
                 results1000.add(fittest.fitness);
                 if(i!=0)
-                    diff = results1000.get(results1000.size()-1) - results1000.get(results1000.size()-2);
+                    diff = results1000.get(results1000.size()-2) - results1000.get(results1000.size()-1);
 
             }
             i++;
@@ -92,7 +93,7 @@ public class Evolution {
     }
 
     private Chromosome compete(Chromosome c0, Chromosome c1) {
-        return c0.fitness > c1.fitness ? c0 : c1;
+        return c0.fitness < c1.fitness ? c0 : c1;
     }
 
     private void crossoverPopulation() {
@@ -135,7 +136,7 @@ public class Evolution {
         Chromosome fittest = population[0];
 
         for (int i = 1; i < population.length; i++)
-            fittest = population[i].fitness > fittest.fitness ? population[i] : fittest;
+            fittest = population[i].fitness < fittest.fitness ? population[i] : fittest;
 
         return fittest;
     }
@@ -143,7 +144,7 @@ public class Evolution {
         Chromosome fittest = population[0];
 
         for (int i = 1; i < population.length; i++)
-            fittest = population[i].fitness < fittest.fitness ? population[i] : fittest;
+            fittest = population[i].fitness > fittest.fitness ? population[i] : fittest;
 
         return fittest;
     }
