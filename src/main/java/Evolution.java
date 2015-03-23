@@ -13,7 +13,7 @@ public class Evolution {
     private int nodes;
     private int edges;
     private int colors;
-    private final double MUTATION = 0.8;
+    private final double MUTATION = 0.6;
     private final double CROSSOVER = 0.8;
 
     public Evolution(ArrayList<ArrayList<Integer>> graph, int nodes, int edges, int population, int colors) {
@@ -54,21 +54,21 @@ public class Evolution {
         int i = 0;
         System.out.println("Pokolenie: " + i + ", " + fittest.fitness);
 
-       // while (fittest.fitness != 0 && diff > 2.0 ) {
-        while (fittest.fitness != 0 && i!= 100 ) {
+        while (fittest.fitness != 0 && diff > 2.0) {
+        //while (fittest.fitness != 0 && i!= 100 ) {
             selectPopulation();
             crossoverPopulation();
             mutatePopulation();
             evaluatePopulation();
             fittest = new Chromosome(findFittest());
             worst = new Chromosome(findWorst());
-            if(i%1 == 0) {
+            /*if(i%10 == 0) {
                 System.out.println("Pokolenie: " + (i + 1));
                 System.out.println("\tmax, " + fittest.fitness);
                 System.out.println("\tmin, " + worst.fitness);
                 System.out.println("\tavg, " + findAvg());
 
-            }
+            }*/
             if (i % 1000 == 0) {
                 results1000.add(fittest.fitness);
                 if(i!=0)
@@ -77,6 +77,13 @@ public class Evolution {
             }
             i++;
         }
+
+
+            System.out.println("Pokolenie: " + (i + 1));
+            System.out.println("\tmax, " + fittest.fitness);
+            System.out.println("\tmin, " + worst.fitness);
+            System.out.println("\tavg, " + findAvg());
+
         return fittest;
     }
 
